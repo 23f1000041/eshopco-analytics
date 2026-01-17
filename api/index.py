@@ -6,11 +6,11 @@ from typing import List
 
 app = FastAPI()
 
-# Enable CORS for all origins
+# Enable CORS for all origins - MUST be configured before routes
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -302,6 +302,11 @@ def read_root():
             "POST /analytics": "Analyze telemetry data by region"
         }
     }
+
+@app.options("/analytics")
+async def options_analytics():
+    """Handle OPTIONS preflight request for CORS"""
+    return {}
 
 @app.post("/analytics")
 def analyze_telemetry(request: AnalyticsRequest):
